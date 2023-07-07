@@ -1,15 +1,15 @@
-**PRISM -- A new toolbox for parameterising battery models**
+**PyBOP -- A new toolbox for parameterising battery models**
 
 Faraday Institution Multiscale Modelling Project + EU 'Intelligent'
 Project
 
-David Howey, Brady Planden, \<*add others in due course*\>
+David Howey, Brady Planden, *add others in due course*
 
-22^nd^ June 2023 (following a workshop on 7^th^ June[^1])
+22nd June 2023 (following a workshop on 7th June)
 
 **Overall objective**
 
-PRISM will be a new open-source software library for parameterising
+PyBOP will be a new open-source software library for parameterising
 battery models.
 
 **Motivation**
@@ -51,13 +51,13 @@ well as PDEs and algebraic constraints.
 
 **Audience**
 
-The first end-users for PRISM will be the MSM and 'intelligent' project
-teams and PRISM developers -- if it isn't useful for us, then it won't
+The first end-users for PyBOP will be the MSM and 'intelligent' project
+teams and PyBOP developers -- if it isn't useful for us, then it won't
 be useful for others!
 
 **Community and values**
 
-We aim to build a broad consortium to develop PRISM, building on and
+We aim to build a broad consortium to develop PyBOP, building on and
 learning from the success of the PyBaMM community. Our values are:
 
 -   Openness (e.g., code is open source on GitHub)
@@ -71,10 +71,10 @@ learning from the success of the PyBaMM community. Our values are:
 -   User-friendliness (putting user requirements first, thinking about
     handholding & workflows)
 
-**What PRISM will do**
+**What PyBOP will do**
 
 A list of some use cases for battery modelling is given in Appendix A.
-From this, we deduce that the two key requirements for PRISM are:
+From this, we deduce that the two key requirements for PyBOP are:
 
 -   *Parameter estimation* of battery models (could be electrochemical
     or equivalent circuit) -- to be used for e.g. pack design purposes,
@@ -83,10 +83,10 @@ From this, we deduce that the two key requirements for PRISM are:
 -   *Design optimisation* studies, e.g., layer thickness, number of
     layers, tab placement.
 
--   \[A tertiary requirement for PRISM might be *model synthesis*, i.e.,
+-   *A tertiary requirement for PyBOP might be *model synthesis*, i.e.,
     generating (low order) models automatically from data or higher
-    order, more complex models. This is not in the scope of PRISM at
-    this stage, though.\]
+    order, more complex models. This is not in the scope of PyBOP at
+    this stage, though.*
 
 A more detailed breakdown of all requirements is given below.
 
@@ -152,72 +152,27 @@ longer-term (i.e., desirable but not essential for a first release).
 
 5.  Clear, documentation with plenty of examples
 
-**How PRISM will work**
+**How PyBOP will work**
 
-PRISM will be a modular library for the parameterisation and
+PyBOP will be a modular library for the parameterisation and
 optimisation of battery models, with a particular focus on classes built
 around PyBaMM models and structures. The figure below gives a conceptual
-idea of how PRISM could be structured. An explanation of each box is
+idea of how PyBOP could be structured. An explanation of each box is
 given below the diagram. This will likely evolve as development
 progresses (e.g., in practice, some things will live "inside" other
 things in a more nested way), so this is just a starting point.
+<p align="center">
+<img src="Media/Architecture.png" width="800" align="center"  />
+</p>
 
-![A picture containing diagram, screenshot, plan, line Description
-automatically generated](media/image1.png){width="6.268055555555556in"
-height="2.6465277777777776in"}
-
-Figure 1: PRISM architecture showcasing multiple forward models and cost
+Figure 1: PyBOP architecture showcasing multiple forward models and cost
 functions
 
 The modules in the above figure are defined as:
 
-+--------+--------------------------+----------------+----------------+
-| *      | **Purpose**              | **Inputs**     | **Outputs**    |
-| *Box** |                          |                |                |
-+========+==========================+================+================+
-| Data   | Ingest data, error check | data filename\ | time series    |
-|        | and clean-up, convert to | metadata       | data (current, |
-|        | required PRISM formats   |                | voltage,       |
-|        |                          |                | temperature,   |
-|        |                          |                | time)          |
-|        |                          |                |                |
-|        |                          |                | metadata       |
-+--------+--------------------------+----------------+----------------+
-| F      | Run the model            | parameter set  | model output   |
-| orward |                          |                | (time series)  |
-| model  |                          | input data     |                |
-|        |                          |                | covariance     |
-|        |                          | initial        | propagation    |
-|        |                          | conditions     |                |
-|        |                          |                | solver         |
-|        |                          | solver         | diagnostics    |
-|        |                          | settings       |                |
-|        |                          |                |                |
-|        |                          | model          |                |
-|        |                          | definition     |                |
-+--------+--------------------------+----------------+----------------+
-| Cost   | Define the cost function | model output   | cost           |
-| fu     | choice (might sit inside |                |                |
-| nction | optimiser). Map from     | time-series    | gr             |
-|        | model output and output  | data           | adient/hessian |
-|        | data to a scalar cost.   |                | estimates      |
-|        |                          | priors,        | $dJ/d\theta$   |
-|        |                          | assumptions    | etc.           |
-+--------+--------------------------+----------------+----------------+
-| Opt    | Iterates the forward     | cost           | parameter      |
-| imiser | model parameters and     |                | value(s)       |
-|        | simulations using the    | gr             |                |
-|        | cost function            | adient/hessian | convergence    |
-|        | information              | estimates      | and            |
-|        |                          | $dJ/d\theta$   | diagnostics    |
-|        |                          | etc.           | information    |
-|        |                          |                |                |
-|        |                          | parameter      |                |
-|        |                          | bounds         |                |
-|        |                          |                |                |
-|        |                          | optimiser      |                |
-|        |                          | settings       |                |
-+--------+--------------------------+----------------+----------------+
+<p align="center">
+<img src="Media/Modules_table.png" width="500" align="center"  />
+</p>
 
 **Workflow**
 
@@ -228,9 +183,9 @@ tractable. For example in a battery model a typical flow would be to
 first fit thermal properties, then fit OCV data, then fit dynamic
 electrical/electrochemical parameters.
 
-![A picture containing text, screenshot, diagram, font Description
-automatically generated](media/image2.png){width="6.268055555555556in"
-height="3.4902777777777776in"}
+<p align="center">
+<img src="Media/Workflow.png" width="600" align="center"  />
+</p>
 
 **Open questions**
 
@@ -241,29 +196,29 @@ height="3.4902777777777776in"}
     Scipy.optimize?
 
 -   What are the minimal requirements for the PyBaMM model class?
-    [[\[1\]]{.underline}](https://docs.pybamm.org/en/latest/_modules/pybamm/models/base_model.html)
-    [[\[2\]]{.underline}](https://github.com/pybamm-team/PyBaMM/tree/develop/pybamm/models/full_battery_models/lithium_ion)
+    [\[1\]](https://docs.pybamm.org/en/latest/_modules/pybamm/models/base_model.html)
+    [\[2\]](https://github.com/pybamm-team/PyBaMM/tree/develop/pybamm/models/full_battery_models/lithium_ion)
 
 -   What are the large probabilistic/optimisation libraries in Python?
-    [[\[1\]]{.underline}](https://www.tensorflow.org/probability)
-    [[\[2\]]{.underline}](https://botorch.org/)
-    [[\[3\]]{.underline}](https://www.pymc.io/welcome.html)
-    [[\[4\]]{.underline}](https://pytorch.org/)
-    [[\[5\]]{.underline}](https://pystan.readthedocs.io/en/latest/)
-    [[\[6\]]{.underline}](https://scikit-learn.org/stable/index.html)
+    [\[1\]](https://www.tensorflow.org/probability)
+    [\[2\]](https://botorch.org/)
+    [\[3\]](https://www.pymc.io/welcome.html)
+    [\[4\]](https://pytorch.org/)
+    [\[5\]](https://pystan.readthedocs.io/en/latest/)
+    [\[6\]](https://scikit-learn.org/stable/index.html)
 
 -   What is the best way to interface with
     [Galv](https://github.com/Battery-Intelligence-Lab/galvanalyser):
 
-    -   API definition between Galv ↔ PRISM ↔ PyBaMM
+    -   API definition between Galv ↔ PyBOP ↔ PyBaMM
 
-    -   Automated parameterisation in Galv via PRISM
+    -   Automated parameterisation in Galv via PyBOP
 
     -   Enabling automated digital twin predictions
 
 **Next actions**
 
--   Circulate this document to those who came to the PRISM workshop for
+-   Circulate this document to those who came to the PyBOP workshop for
     comments and edits.
 
 -   Then circulate to the wider MSM team.
@@ -274,7 +229,7 @@ height="3.4902777777777776in"}
     examples.
 
 -   Discuss possible merging of some of the existing codebase from
-    pybamm-param into PRISM.
+    pybamm-param into PyBOP.
 
 -   Could we identify a few example cases and collate the minimum
     parameterisation and validation data-sets required (for those
@@ -291,10 +246,11 @@ height="3.4902777777777776in"}
 Here are some reasons why battery modelling matters. There are more!
 This is just a starting point.
 
-![A picture containing text, screenshot Description automatically
-generated](media/image3.png){width="6.141411854768154in"
-height="3.961538713910761in"}
+<p align="center">
+<img src="Media/Use_Case.png" width="700" align="center"  />
+</p>
 
-[^1]: Attendees: David Howey, Brady Planden, Ferran Brosa Planella,
+
+[1]: Attendees: David Howey, Brady Planden, Ferran Brosa Planella,
     Monica Marinescu, Alistair Hales, Martin Robinson, Masaki Adachi,
     Nicola Courtier, Jon Chapman and Dhammika Widanalage
